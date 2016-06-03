@@ -38,32 +38,24 @@ class Sites extends TerminusCollection {
    * @param string[] $options Information to run workflow, with the following
    *   keys:
    *   - label
-   *   - name
+   *   - site_name
    *   - organization_id
    *   - upstream_id
    * @return Workflow
    */
-  public function addSite($options = array()) {
-    $data = array(
-      'label'     => $options['label'],
-      'site_name' => $options['name']
-    );
-
-    if (isset($options['organization_id'])) {
-      $data['organization_id'] = $options['organization_id'];
-    }
-
+  public function addSite(array $options = []) {
+    $params = $options;
     if (isset($options['upstream_id'])) {
-      $data['deploy_product'] = array(
+      $params['deploy_product'] = [
         'product_id' => $options['upstream_id']
       );
+      unset($params['upstream_id']);
     }
 
     $workflow = $this->user->workflows->create(
       'create_site',
-      array('params' => $data)
+      compact('params');
     );
-
     return $workflow;
   }
 
@@ -102,7 +94,25 @@ class Sites extends TerminusCollection {
   }
 
   /**
-    * Removes site with given site ID from cache
+   * Creates a new site for migration
+   *
+   * @param string[] $options Information to run workflow, with the following
+   *   keys:
+   *   - label
+   *   - site_name
+   *   - organization_id
+   * @return Workflow
+   */
+  public function createForMigration($params = []) {
+    $workflow = $this->user->workflows->create(
+      'create_site_for_migration',
+      compact('params')
+    );
+    return $workflow;
+  }
+
+  /**
+   * Removes site with given site ID from cache
    *
    * @param string $site_name Name of site to remove from cache
    * @return void

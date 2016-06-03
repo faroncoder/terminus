@@ -1357,7 +1357,7 @@ class SiteCommand extends TerminusCommand {
    * [--site=<site>]
    * : Name of the site to migrate this archive into
    *
-   * [--url=<url>]
+   * [--url=<URL>]
    * : The URL to the archive file to migrate onto Pantheon
    */
   public function migrate($args, $assoc_args) {
